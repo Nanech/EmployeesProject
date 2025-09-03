@@ -1,6 +1,6 @@
 namespace Employees.API.Models;
 
-internal class Departament
+public class Departament
 {
     public int Id { get; init; }
     public string Name { get; set; }

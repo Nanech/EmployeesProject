@@ -8,6 +8,5 @@ public class Employee
     public string Phone { get; set; }
     public int CompanyId { get; set; }
     public Passport Passport { get; set; }
-    public ICollection<EmployeeDepartament> EmployeeDepartaments { get; init; }
-    
+    public int DepartamentId { get; set; }
 }
