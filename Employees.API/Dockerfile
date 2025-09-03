@@ -1,23 +1,21 @@
-﻿FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
-USER $APP_UID
-WORKDIR /app
-EXPOSE 8080
-EXPOSE 8081
-
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
-ARG BUILD_CONFIGURATION=Release
+﻿FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
-COPY ["Employees.API/Employees.API.csproj", "Employees.API/"]
-RUN dotnet restore "Employees.API/Employees.API.csproj"
+
+# Copy the project file and restore dependencies.
+# This step is cached by Docker for faster builds.
+COPY ["Employees.API.csproj", "./"]
+RUN dotnet restore "Employees.API.csproj"
+
+# Copy the rest of the application code
 COPY . .
-WORKDIR "/src/Employees.API"
-RUN dotnet build "./Employees.API.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
-FROM build AS publish
-ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "./Employees.API.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+# Publish the application for production
+RUN dotnet publish "Employees.API.csproj" -c Release -o /app/publish
 
-FROM base AS final
+# Use the final base image for the final, smaller runtime image
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS final
 WORKDIR /app
-COPY --from=publish /app/publish .
+COPY --from=build /app/publish .
+
+# The application entry point
 ENTRYPOINT ["dotnet", "Employees.API.dll"]
