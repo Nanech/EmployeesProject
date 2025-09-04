@@ -152,7 +152,7 @@ public class EmployeeRepository(IDbConnectionFactory connection) : IEmployeeRepo
                 passportParams.Add("Id", passportId);
                 if (!string.IsNullOrEmpty(employee.Passport.Type))
                 {
-                    passportFields.Add("type == @Type");
+                    passportFields.Add("type = @Type");
                     passportParams.Add("Type", employee.Passport.Type);
                 }
 
