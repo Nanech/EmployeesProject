@@ -1,16 +1,20 @@
 using Employees.API.Models;
+using Employees.API.Models.DTOs;
 
 namespace Employees.API.Repositories.Interfaces;
 
 public interface IEmployeeRepository
 {
-    Task<int> AddEmployeeAsync(Employee employee);
-    Task DeleteEmployeeAsync(int id);
-    Task<IEnumerable<Employee>> SearchEmployeesByCompanyIdAsync(int companyId);
-    
-    Task UpdateEmployeeAsync(Employee employee);
-    
-    // maybe not needed
-    Task<IEnumerable<Employee>> GetAllEmployeesAsync();
-    Task<Employee> GetEmployeeByIdAsync(int id);
+    Task<EmployeeDto?> GetEmployeeByIdAsync(int employeeId);
+    Task<int?> AddEmployeeAsync(CreateEmployeeDto employeeDto);
+    Task<bool> PatchEmployeeAsync(int employeeId, CreateEmployeeDto employee);
+    Task<bool> DeleteEmployeeAsync(int employeeId);
+
+    Task<IEnumerable<EmployeeDto>> GetEmployeesByCompanyAsync(int companyId);
+    Task<IEnumerable<EmployeeDto>> GetEmployeesByDepartmentAsync(int departmentId);
+
+    Task<bool> EmployeeExistsAsync(int userId);
+    Task<bool> CompanyExistsAsync(int companyId);
+    Task<bool> DepartmentExistsAsync(int departmentId);
+    Task<bool> DoesEmployeeHasPassport(int employeeId);
 }
