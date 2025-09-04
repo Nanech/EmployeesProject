@@ -14,7 +14,7 @@ create table companies(
 create table departments(
     id serial primary key,
     name varchar(100) not null,
-    phone varchar(15) not null,
+    phone varchar(20) not null
 );
 
 create table company_departments(
@@ -30,6 +30,7 @@ create table employees(
     surname varchar(100) not null,
     phone varchar(15) not null,
     passport_id integer not null unique,
+    company_id integer not null references companies(id),
     foreign key (passport_id) references passports(id) on delete cascade
 );
 
@@ -53,6 +54,12 @@ insert into departments (name, phone) values
     ('Отдел поддержки', '+7 (999) 456-78-90'),
     ('HR отдел', '+7 (999) 567-89-01');
 
+insert into passports (type, number) values 
+    ('Паспорт', '1234567890');
+
+insert into employees (name, surname, phone, passport_id, company_id) values 
+    ('Алексей', 'Петров', '+79991234567', 1, 1);
+
 -- Связываем департаменты с компаниями
 insert into company_departments (company_id, department_id) values 
     (1, 1), -- Технологии будущего - Отдел разработки
@@ -63,3 +70,5 @@ insert into company_departments (company_id, department_id) values
     (3, 5), -- Цифровые системы - HR отдел
     (3, 1); -- Цифровые системы - Отдел разработки
 
+insert into employee_departments (employee_id, department_id) values
+    (1, 1);
